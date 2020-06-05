@@ -1,0 +1,10 @@
+{
+    "ConnectionStrings":{
+        "SensorTemp":{
+            "user": "root",
+            "password": "5wbyt90yww5rxbgbkep87rm9",
+            "host": "127.0.0.1",
+            "database": "tempsensors"
+        }
+    }
+}
