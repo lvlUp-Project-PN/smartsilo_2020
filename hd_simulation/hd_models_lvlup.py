@@ -1,4 +1,4 @@
-import json, os, math
+import json, os, math, time, random
 from datetime import datetime
 from dbconnection.data import SensorDataRepository
 from dbconnection.services import SensorsDataServices
@@ -18,66 +18,28 @@ class Gateway:
     def __init__(self):
         self.gateway_id:str = None
         self.sensors:list = []
-        self.out:list = []
+        self._output_params:dict = dict()
+
+        path = os.path.join(os.getcwd(),"outconfig.json")
+        with open(path) as file:
+            self._output_params = json.loads(file.read())
 
     def get_data_from_sensors(self):
-        while True:
-            for sensor in self.sensors:
-                self.out.append(sensor.output)
+        for sensor in self.sensors:
+            level = self._convert_into_quantity(sensor,sensor.assigned_silos)
+            self.send_data_to_db(
+                sensor.assigned_silos.silos_id,
+                level
+            )
 
-
-class Silos:
-    def __init__(self,silos_id,d1,d2,d3,d4,d5,liq_density):
-        """
-        d1: raggio del silos \n
-        d2: raggio minore rastremazione silos \n
-        d3: altezza rastremazione silos \n
-        d4: altezza parte cilindrica silos \n
-        d5: altezza calotta sferica
-        """
-        self.silos_id = silos_id
-        self._d1:float = d1
-        self._d2:float = d2
-        self._d3:float = d3
-        self._d4:float = d4
-        self._d5:float = d5
-
-        self.content:float = 0.0
-        self.max_content:float = sum([
-            (((math.pi*((self._d1/2)**2)) + (math.pi*((self._d2/2)**2)) + math.sqrt((math.pi*((self._d1/2)**2)) * (math.pi*((self._d2/2)**2))))*self._d3)/3,
-            (math.pi*((self._d1/2)**2))*self._d4,
-            math.pi*self._d5*(((((self._d1/2)**2) + self._d5**2)/2*self._d5)-self._d5/3)
-        ])
-        self.liquid_density:float = 0.0
-        self.silos_temperature:float = 0.0
-    
-    def update_content_level(self):
-        pass
-        
-
-class Sensor:
-    def __init__(self):
-        self.sensor_id = None
-        self.output:float = 4.0
-        self.fondo_scala:float = 20.0
-        self.assigned_silos = None
-
-    def silos_listener(self):
-        """
-        silos: Instance of silos class
-        """
-        self.silos.content
-
-
-class Gateway:
-    def __init__(self):
-        self.gateway_id:str = None
-        self.sensors:list = []
-
-    def get_data_from_sensors(self):
-        while True:
-            for sensor in self.sensors:
-                self.out.append((sensor.sensor_id,sensor.output))
+    def _convert_into_quantity(self, sensor, silos):
+        if silos.iscylindrical:
+            output_correct = sensor.output/(1 + sensor._k_temp/10)
+            pressure = ((output_correct/sensor._full_scale))*100000
+            height = pressure/(silos.p1*9.80665)
+            return ((math.pi * pow((silos._d1/2.0),2.0))*height)*1000
+        else:
+            return
 
     def send_data_to_db(self,silos_id, silos_value):
         service = SensorsDataServices(SensorDataRepository(Configuration(),"SensorTemp"))
@@ -85,13 +47,121 @@ class Gateway:
         data.SilosCode = silos_id
         data.SilosDataTime = datetime.now()
         data.SilosValue = silos_value
-        data.CodiciErrore = None
         service.insert(data)
-    
 
 
+class Silos:
+    def __init__(self,silos_id,d1,d2,d3,d4,d5,liq_density,flow_per_sec):
+        """
+        d1: raggio del silos \n
+        d2: raggio minore rastremazione silos \n
+        d3: altezza rastremazione silos \n
+        d4: altezza parte cilindrica silos \n
+        d5: altezza calotta sferica \n
+        p1: liquid_density
+        p2: portata riempimento/svuotamento
+        """
+        self.silos_id = silos_id
+        self._d1:float = d1
+        self._d2:float = d2
+        self._d3:float = d3
+        self._d4:float = d4
+        self._d5:float = d5
+        self.iscylindrical = False
+        
+        self.p1:float = liq_density
+        self._p2:float = flow_per_sec
+        self.content:float = 0.0
+        self._max_content:float
+        
+        self._counter = random.randint(1,10)
+        self._action = random.randint(0,100)
 
 
+        if self._d1 == self._d2:
+            lower_sect = (math.pi*((self._d1/2)**2))*self._d3
+            self.iscylindrical = True
+        else:
+            lower_sect = (((math.pi*((self._d1/2)**2)) + (math.pi*((self._d2/2)**2)) + 
+            math.sqrt((math.pi*((self._d1/2)**2)) * (math.pi*((self._d2/2)**2))))*self._d3)/3
+        self._max_content = sum([
+            lower_sect,
+            (math.pi*((self._d1/2)**2))*self._d4,
+            math.pi*self._d5*(((((self._d1/2)**2) + self._d5**2)/2*self._d5)-self._d5/3)
+        ])
 
+    def run(self):
+        if self._counter > 0:
+            if self.content == self._max_content:
+                self.content -= self._p2
+                self._counter -= 1 
+                return
+            if self.content > 0:
+                if self._action%2 == 0:
+                    self.content += self._p2
+                    self._counter -= 1
+                    return
+                else:
+                    self.content -= self._p2
+                    self._counter -= 1
+                    return
+            else:
+                self.content += self._p2
+                self._counter -= 1
+                return
+        else:
+            self._counter = random.randint(1,10)
+            self.action = random.randint(0,1)
+            self.run()
 
         
+class Sensor:
+    def __init__(self, sensor_id, min_output, full_scale, max_pressure, break_coeff, detected_temp):
+        """
+        min_output [mA] 
+        full_scale [mA]
+        max_pressure [bar]
+        break_coeff [max_pressure * x]
+        detected_temp [°C]
+        """
+        self.sensor_id = sensor_id
+        self._min_output:float = min_output
+        self._full_scale:float = full_scale
+        self._max_pressure:float = max_pressure
+        self._full_silos_pressure:float = 0.0
+        self._break_coeff:int = break_coeff
+        self._break_pressure:float = self._max_pressure * self._break_coeff
+        self.detected_temp:float = detected_temp
+        self.assigned_silos = None
+        self._k_temp = 0.0
+        self._counter = random.randint(1,10) 
+        self.output:float = 4.0
+
+        self._set_temp_k()
+
+    def _set_temp_k(self):
+        temp = self.detected_temp
+        if temp > -10.0 and temp < 4:
+            self._k_temp = 1.1
+        elif temp > 4 and temp < 35:
+            self._k_temp = 0.7
+        elif temp > 35 and temp < 50:
+            self._k_temp = 1.1
+    
+    def _set_full_silos_pressure(self):
+        if self.assigned_silos.iscylindrical:
+            height = self.assigned_silos._max_content/(math.pi*pow((self.assigned_silos._d1/2.0),2.0))
+            self._full_silos_pressure = (self.assigned_silos.p1 * height * 9.80665)*0.00001
+        else:
+            pass
+
+    def run(self):
+        if self._full_silos_pressure == 0.0:
+            self._set_full_silos_pressure()
+        if self.assigned_silos.iscylindrical:
+            height = self.assigned_silos.content/(math.pi*pow((self.assigned_silos._d1/2.0),2.0))
+            pressure = (self.assigned_silos.p1 * height * 9.80665)*0.00001
+            times = (pressure/(self._full_silos_pressure))*100
+            self.output = (4+(self._min_output/self._full_scale)*times)*(1 + self._k_temp/10)
+        else:
+            pass        

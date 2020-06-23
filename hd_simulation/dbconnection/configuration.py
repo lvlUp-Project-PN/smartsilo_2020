@@ -5,6 +5,6 @@ class Configuration:
 
     def __init__(self):
         self.conndict:dict = None
-        path = os.path.join(os.getcwd(),"appconfig.json")
+        path = os.path.join(os.getcwd(),"config","appconfig.json")
         with open(path) as file:
             self.conndict = json.loads(file.read())["ConnectionStrings"]

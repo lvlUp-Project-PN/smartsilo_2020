@@ -6,4 +6,4 @@ class SensorData:
         self.SilosCode:str = None
         self.SilosDataTime:datetime = None
         self.SilosValue:float = None
-        self.CodiciErrore = None
+        self.ErrorCodes = None

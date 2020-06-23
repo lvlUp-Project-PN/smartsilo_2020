@@ -2,6 +2,9 @@ from dbconnection.data import SensorDataRepository
 from dbconnection.models import SensorData
 
 class SensorsDataServices:
+    """
+    args: repository [SensorDataRepository]
+    """
     def __init__(self,repository:SensorDataRepository):
         self._repository = repository
     
