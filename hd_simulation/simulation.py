@@ -59,21 +59,9 @@ def exec_tasks_on_insts():
             Thread(target=silos.run()).run()
         for sensor in sensors:
             Thread(target=sensor.run()).start()
-        print_values()
         for gateway in gateways:
             gateway.get_data_from_sensors()
         time.sleep(1.0)
-    
-def print_values():
-    print(
-        "\n"
-        " ID: %s OUTPUT : %f\n" % (sensors[0].sensor_id,sensors[0].output),
-        "ID: %s OUTPUT : %f\n" % (sensors[1].sensor_id,sensors[1].output),
-        "ID: %s OUTPUT : %f\n" % (sensors[2].sensor_id,sensors[2].output),
-        "ID: %s OUTPUT : %f" % (sensors[3].sensor_id,sensors[3].output),
-        "\n\n"
-        "-------------------------------------------------------------------------------"
-    )
                 
 def run():
     create_instances()

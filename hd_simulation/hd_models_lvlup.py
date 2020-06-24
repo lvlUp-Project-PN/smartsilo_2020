@@ -20,10 +20,6 @@ class Gateway:
         self.sensors:list = []
         self._output_params:dict = dict()
 
-        path = os.path.join(os.getcwd(),"outconfig.json")
-        with open(path) as file:
-            self._output_params = json.loads(file.read())
-
     def get_data_from_sensors(self):
         for sensor in self.sensors:
             level = self._convert_into_quantity(sensor,sensor.assigned_silos)
@@ -34,9 +30,8 @@ class Gateway:
 
     def _convert_into_quantity(self, sensor, silos):
         if silos.iscylindrical:
-            output_correct = sensor.output/(1 + sensor._k_temp/10)
-            pressure = ((output_correct/sensor._full_scale))*100000
-            height = pressure/(silos.p1*9.80665)
+            pressure = ((sensor.output-sensor._min_output)/(sensor._full_scale-sensor._min_output))*sensor._max_pressure
+            height = (pressure*100000)/(silos.p1*9.80665)
             return ((math.pi * pow((silos._d1/2.0),2.0))*height)*1000
         else:
             return
@@ -58,7 +53,7 @@ class Silos:
         d3: altezza rastremazione silos \n
         d4: altezza parte cilindrica silos \n
         d5: altezza calotta sferica \n
-        p1: liquid_density
+        p1: liquid_density \n
         p2: portata riempimento/svuotamento
         """
         self.silos_id = silos_id
@@ -68,50 +63,60 @@ class Silos:
         self._d4:float = d4
         self._d5:float = d5
         self.iscylindrical = False
-        
+        self._is_in_loading = False
+    
         self.p1:float = liq_density
         self._p2:float = flow_per_sec
-        self.content:float = 0.0
         self._max_content:float
         
-        self._counter = random.randint(1,10)
-        self._action = random.randint(0,100)
+        def cal_max_content():
+            if self._d1 == self._d2:
+                self._max_content = sum([
+                    (math.pi*((self._d1/2)**2))*(self._d3 + self._d4),
+                    math.pi*pow(self._d5,2.0)*(((((self._d1/2)**2) + self._d5**2)/(2*self._d5))-(self._d5/3))
+                ])
+                self.iscylindrical = True
+            else:
+                lower_sect = (((math.pi*((self._d1/2)**2)) + (math.pi*((self._d2/2)**2)) + 
+                math.sqrt((math.pi*((self._d1/2)**2)) * (math.pi*((self._d2/2)**2))))*self._d3)/3
+                self._max_content = sum([
+                    lower_sect,
+                    (math.pi*((self._d1/2)**2))*self._d4,
+                    math.pi*pow(self._d5,2.0)*(((((self._d1/2)**2) + self._d5**2)/(2*self._d5))-(self._d5/3))
+                ])
 
-
-        if self._d1 == self._d2:
-            lower_sect = (math.pi*((self._d1/2)**2))*self._d3
-            self.iscylindrical = True
-        else:
-            lower_sect = (((math.pi*((self._d1/2)**2)) + (math.pi*((self._d2/2)**2)) + 
-            math.sqrt((math.pi*((self._d1/2)**2)) * (math.pi*((self._d2/2)**2))))*self._d3)/3
-        self._max_content = sum([
-            lower_sect,
-            (math.pi*((self._d1/2)**2))*self._d4,
-            math.pi*self._d5*(((((self._d1/2)**2) + self._d5**2)/2*self._d5)-self._d5/3)
-        ])
+        cal_max_content()
+        self.content:float = [0.0,self._max_content][random.randint(0,1)]
+        self._counter:int = random.randint(4,int(self._max_content/self._p2))
+        self._action = random.randint(0,10)
 
     def run(self):
         if self._counter > 0:
-            if self.content == self._max_content:
-                self.content -= self._p2
-                self._counter -= 1 
-                return
-            if self.content > 0:
-                if self._action%2 == 0:
-                    self.content += self._p2
-                    self._counter -= 1
-                    return
-                else:
-                    self.content -= self._p2
-                    self._counter -= 1
-                    return
-            else:
-                self.content += self._p2
+            if self._action % 2 == 0:
                 self._counter -= 1
-                return
+            else:
+                if self.content > self._max_content:
+                    self._is_in_loading = False
+                    self.content -= self.content-self._max_content
+                    self._counter -= 1 
+                    return
+                elif self.content > 0:
+                    if self._is_in_loading:
+                        self.content += self._p2/(math.pi*((self._d1/2)**2))
+                        self._counter -= 1
+                        return
+                    else:
+                        self.content -= self._p2/(math.pi*((self._d1/2)**2))
+                        self._counter -= 1
+                        return
+                else:
+                    self._is_in_loading = True
+                    self._counter = int(self._max_content/self._p2)
+                    self.content += self._p2/(math.pi*((self._d1/2)**2))
+                    self._counter -= 1
+                    return
         else:
-            self._counter = random.randint(1,10)
-            self.action = random.randint(0,1)
+            self._counter = random.randint(1,int(self._max_content/self._p2))
             self.run()
 
         
@@ -161,7 +166,7 @@ class Sensor:
         if self.assigned_silos.iscylindrical:
             height = self.assigned_silos.content/(math.pi*pow((self.assigned_silos._d1/2.0),2.0))
             pressure = (self.assigned_silos.p1 * height * 9.80665)*0.00001
-            times = (pressure/(self._full_silos_pressure))*100
-            self.output = (4+(self._min_output/self._full_scale)*times)*(1 + self._k_temp/10)
+            times = (pressure/self._max_pressure)*100
+            self.output = self._min_output * 1 + (((self._full_scale-self._min_output)/100)*times)
         else:
-            pass        
+            pass
