@@ -407,3 +407,43 @@ class SilosErrorCategoryUpdateDel(APIView):
         silosobj=self.get_object(pk)
         silosobj.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class SilosSpecsTable(APIView):
+
+    def get(self,request):
+        silosobj= SilosSpecs.objects.all()
+        silosserializeobj= SilosSpecsSerialize(silosobj,many=True)
+        return Response(silosserializeobj.data)
+
+    def post(self,request):
+        serializeobj= SilosSpecsSerialize(data=request.data)
+        if serializeobj.is_valid():
+            serializeobj.save()
+            return Response(serializeobj.data,status=status.HTTP_201_CREATED)
+        return Response(serializeobj.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class SilosSpecsUpdateDel(APIView):
+
+    def get_object(self,pk):
+        try:
+            return SilosSpecs.objects.get(pk=pk)
+        except SilosSpecs.DoesNotExist:
+            return Response(serializeobj.errors,status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self,request,pk):
+        silosobj=self.get_object(pk)
+        serializeobj=SilosSpecsSerialize(silosobj)
+        return Response(serializeobj.data)
+
+    def put(self,request,pk):
+        silosobj=self.get_object(pk)
+        silosserializeobj=SilosSpecsSerialize(silosobj,data=request.data)
+        if silosserializeobj.is_valid():
+            silosserializeobj.save()
+            return Response(silosserializeobj.data,status.HTTP_200_OK)
+        return Response(silosserializeobj.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self,request,pk):
+        silosobj=self.get_object(pk)
+        silosobj.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

@@ -50,3 +50,8 @@ class SilosErrorCategorySerialize(serializers.ModelSerializer):
     class Meta:
         model=SilosErrorCategory
         fields="__all__"
+
+class SilosSpecsSerialize(serializers.ModelSerializer):
+    class Meta:
+        model=SilosSpecs
+        fields="__all__"
