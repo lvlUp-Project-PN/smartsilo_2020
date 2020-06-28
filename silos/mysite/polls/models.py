@@ -186,7 +186,7 @@ class SilosAvgWeek(models.Model):
 
 
 class SilosDataIrt(models.Model):
-    silos_data_time = models.DateField(primary_key=True)
+    silos_data_time = models.DateTimeField()
     silos_code = models.CharField(max_length=12)
     silos_value = models.FloatField()
     error_code = models.CharField(max_length=20, blank=True, null=True)

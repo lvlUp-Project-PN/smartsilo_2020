@@ -2,10 +2,30 @@
   {% extends "base.html" %}
   {% load static %}
   {% block content %}
-  <h2>Login</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Login</button>
-</form>
+
+  <div class="modal-dialog text-center">
+        <div class="col-sm-8 main-section">
+            <div class="modal-content">
+                <div class="col-12 user-img">
+                    <img src="{% static 'polls/images/user.svg' %}" alt="">
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                      <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-outline-light">Login</button>
+                      </form>
+                    </div>
+
+                </div>
+
+                <div class="mt-3 mb-1">
+                    <h6>SmartSilo - login</h6>
+                </div>
+            </div> <!-- Fine del contenuto -->
+        </div>
+    </div>
+
+
   {% endblock %}

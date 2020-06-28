@@ -84,7 +84,7 @@ DATABASES = {
         'NAME': 'smartsilo_db',
         'USER': 'root',
         'PASSWORD': 'l2v0l2u0p',
-        'HOST': 'iiot2020-lvlupdb.c9nj1x2p6gk5.eu-west-1.rds.amazonaws.com',   # Or an IP Address that your DB is hosted on
+        'HOST': 'iiot2020-lvlup.c9nj1x2p6gk5.eu-west-1.rds.amazonaws.com',   # Or an IP Address that your DB is hosted on
         'PORT': '3306',
     }
 }
