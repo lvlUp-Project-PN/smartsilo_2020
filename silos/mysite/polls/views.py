@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import *
 from .serialize import *
 from rest_framework.response import Response
@@ -9,6 +9,14 @@ from django.http import HttpResponse
 
 def index(request):
     return HttpResponse("Hello, world.")
+
+def silosvalue (request, pk):
+
+    silosobj= Silos.objects.filter(site_id=pk)
+    
+    context = {'siteresult': silosobj}
+
+    return render(request, 'home2.html', context )
 
 class SilosDataIrtTable(APIView):
 

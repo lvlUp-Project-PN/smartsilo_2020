@@ -1,6 +1,7 @@
 from django.db import models
 
 
+
 class AuthGroup(models.Model):
     name = models.CharField(unique=True, max_length=150)
 
@@ -147,11 +148,14 @@ class Silos(models.Model):
     site_id = models.CharField(max_length=4, blank=True, null=True)
     raspberry_id = models.CharField(max_length=4, blank=True, null=True)
     silos_id = models.CharField(max_length=4, blank=True, null=True)
-    silos_code = models.CharField(max_length=12, blank=True, null=True)
+    silos_code = models.CharField(primary_key=True, max_length=12)
+
+    
 
     class Meta:
         managed = False
         db_table = 'silos'
+
 
 
 class SilosAvgDay(models.Model):

@@ -1,10 +1,11 @@
 from django.urls import path
 
 from . import views
+from django.views.generic.base import TemplateView
 
 urlpatterns = [
 
-    path('', views.index, name='index'),
+
     path('SilosDataIrt/',views.SilosDataIrtTable.as_view()),
     path('SilosDataIrt/<str:pk>',views.SilosDataIrtUpdateDel.as_view()),
     path('LoginEmail/',views.LoginEmailTable.as_view()),
@@ -27,5 +28,7 @@ urlpatterns = [
     path('SilosErrorCategory/<int:pk>',views.SilosErrorCategoryUpdateDel.as_view()),
     path('SilosSpecs/',views.SilosSpecsTable.as_view()),
     path('SilosSpecs/<str:pk>',views.SilosSpecsUpdateDel.as_view()),
+    path('Home/', TemplateView.as_view(template_name='home.html'), name='home'),
+    path('Home/<str:pk>', views.silosvalue, name='silosvalue'),
 
 ]

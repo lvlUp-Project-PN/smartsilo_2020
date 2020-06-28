@@ -20,6 +20,6 @@ urlpatterns = [
     path('crud/', include('polls.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('', TemplateView.as_view(template_name='home.html'), name='home'),
+
     path('panels/', TemplateView.as_view(template_name='panels.html'), name='panels'),
 ]
