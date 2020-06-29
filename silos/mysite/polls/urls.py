@@ -31,5 +31,5 @@ urlpatterns = [
     path('Home/', views.siloscount, name='home'),
     path('Home/<str:pk>', views.silosvalue, name='home2'),
     path('Graph/', TemplateView.as_view(template_name='graphs.html'), name='graph'),
-    path('Graph/<str:pk>',views.chart.as_view() name='graph2'),
+    path('Graph/<str:pk>',views.chart, name='graph2'),
 ]
