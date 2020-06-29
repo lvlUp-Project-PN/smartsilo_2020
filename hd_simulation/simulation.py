@@ -54,7 +54,7 @@ def create_instances():
         sites.append(sitetmp)
 
 def exec_tasks_on_insts():
-    while True:
+    while True: 
         for silos in siloses:
             Thread(target=silos.run()).run()
         for sensor in sensors:
