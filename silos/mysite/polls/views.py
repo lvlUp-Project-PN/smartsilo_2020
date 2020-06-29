@@ -11,10 +11,15 @@ def index(request):
     return HttpResponse("Hello, world.")
 
 def silosvalue (request, pk):
+    if(pk=='0000'):
 
-    silosobj= Silos.objects.filter(site_id=pk)
-    
-    context = {'siteresult': silosobj}
+        silosobj = SilosDataIrt.objects.all().order_by('-id').distinct()[2:4]
+        context = {'siteresult': silosobj}
+
+
+    if(pk=='0001'):
+        silosobj = SilosDataIrt.objects.all().order_by('id').distinct()[:2]
+        context = {'siteresult': silosobj}
 
     return render(request, 'home2.html', context )
 

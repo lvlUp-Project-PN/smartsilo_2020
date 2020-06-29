@@ -150,7 +150,8 @@ class Silos(models.Model):
     silos_id = models.CharField(max_length=4, blank=True, null=True)
     silos_code = models.CharField(primary_key=True, max_length=12)
 
-
+    def __str__(self):
+        return self.silos_code
 
     class Meta:
         managed = False
@@ -194,6 +195,11 @@ class SilosDataIrt(models.Model):
     silos_code = models.ForeignKey(Silos, models.DO_NOTHING, db_column='silos_code')
     silos_value = models.FloatField()
     error_code = models.CharField(max_length=20, blank=True, null=True)
+
+    def __str__(self):
+        return self.silos_code
+
+
 
     class Meta:
         managed = False
