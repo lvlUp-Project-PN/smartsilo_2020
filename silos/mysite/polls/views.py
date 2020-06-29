@@ -10,7 +10,7 @@ from django.http import HttpResponse
 def index(request):
     return HttpResponse("Hello, world.")
 
-def chart (request, pk):
+def chart(request, pk):
 
     silosobj= SilosAvgDay.objects.all().filter(silos_code=pk)
 
