@@ -58,9 +58,10 @@ class SensorDataRepository:
     date = datetime.isoformat(
       item.SilosDataTime
     )
-    query = "INSERT INTO silos_data_irt VALUES('%s','%s',%f,%s);" % (
-      item.SilosCode,
+    query = "INSERT INTO silos_data_irt VALUES('%s','%s','%s',%f,%s);" % (
+      'NULL',
       item.SilosDataTime,
+      item.SilosCode,
       item.SilosValue,
       "NULL"
     )

@@ -1,5 +1,6 @@
-import json, os, math, time, random
+import json, os, math, time, random, json
 from datetime import datetime
+from requests import post
 from dbconnection.data import SensorDataRepository
 from dbconnection.services import SensorsDataServices
 from dbconnection.models import SensorData
@@ -42,7 +43,9 @@ class Gateway:
         data.SilosCode = silos_id
         data.SilosDataTime = datetime.now()
         data.SilosValue = silos_value
+        #post(url='http://52.49.107.35/post/SilosDataIrt/', json=json.dumps(data))
         service.insert(data)
+        print(f'value inserted: {silos_id} {data.SilosDataTime} {data.SilosValue}')
 
 
 class Silos:
@@ -88,12 +91,17 @@ class Silos:
         cal_max_content()
         self.content:float = [0.0,self._max_content][random.randint(0,1)]
         self._counter:int = random.randint(4,int(self._max_content/self._p2))
-        self._action = random.randint(0,10)
+        self._stop_counter = random.randint(0,10)
+        self._action = random.randint(0,1)
 
     def run(self):
         if self._counter > 0:
-            if self._action % 2 == 0:
-                self._counter -= 1
+            if self._action == 0:
+                if self._stop_counter == 0:
+                    self._action = 1
+                    self._stop_counter = random.randint(0,10)
+                else:
+                    self._stop_counter -= 1
             else:
                 if self.content > self._max_content:
                     self._is_in_loading = False
@@ -117,6 +125,7 @@ class Silos:
                     return
         else:
             self._counter = random.randint(1,int(self._max_content/self._p2))
+            self._action = 0
             self.run()
 
         
