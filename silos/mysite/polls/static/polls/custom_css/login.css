@@ -2,7 +2,7 @@
 
 body {
     font-family: 'Roboto', sans-serif;
-    background-color: lightgray;
+    background-color: #2f4858;
 }
 
 .main-section {
@@ -49,4 +49,3 @@ body {
 .btn {
     margin-bottom: 20px;
 }
-

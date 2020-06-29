@@ -28,7 +28,7 @@ urlpatterns = [
     path('SilosErrorCategory/<int:pk>',views.SilosErrorCategoryUpdateDel.as_view()),
     path('SilosSpecs/',views.SilosSpecsTable.as_view()),
     path('SilosSpecs/<str:pk>',views.SilosSpecsUpdateDel.as_view()),
-    path('Home/', TemplateView.as_view(template_name='home.html'), name='home'),
-    path('Home/<str:pk>', views.silosvalue, name='silosvalue'),
+    path('Home/', views.siloscount, name='home'),
+    path('Home/<str:pk>', views.silosvalue, name='home2'),
 
 ]

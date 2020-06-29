@@ -20,21 +20,18 @@
                     <div class="row">
                         <div class="col text-center">
                             <div class="customMarginTopTwo">
-                                <h4 class="text-weight-bold">user_name</h4>
+                                <h4 class="text-weight-bold">{{ user.username }}</h4>
                             </div>
                         </div>
                     </div>
                 </div>
                 <ul class="nav flex-column sidebar-nav text-center">
+
+                    {% for site in count %}
                     <li class="nav-item">
-                        <a class="nav-link" href="#">site_code</a>
+                        <a class="nav-link" href="/crud/Home/{{ site.site_id }} "> Site {{ site.site_id }}</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">site_code</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">site_code</a>
-                    </li>
+                    {% endfor %}
                     <div class="marginBottomPersonalized">
                         <img src="{% static 'polls/images/logoAziendaCliente.png' %}" alt="" width=239px height=239px>
                     </div>

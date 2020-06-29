@@ -10,16 +10,28 @@ from django.http import HttpResponse
 def index(request):
     return HttpResponse("Hello, world.")
 
+def siloscount(request):
+
+    silosobj= Silos.objects.values('site_id').distinct()
+
+    context = {'count': silosobj}
+
+
+    return render(request, 'home.html', context )
+
 def silosvalue (request, pk):
     if(pk=='0000'):
 
         silosobj = SilosDataIrt.objects.all().order_by('-id').distinct()[2:4]
-        context = {'siteresult': silosobj}
+
 
 
     if(pk=='0001'):
         silosobj = SilosDataIrt.objects.all().order_by('id').distinct()[:2]
-        context = {'siteresult': silosobj}
+
+
+    silosobj2= Silos.objects.values('site_id').distinct()
+    context = {'siteresult': silosobj, 'count': silosobj2}
 
     return render(request, 'home2.html', context )
 
