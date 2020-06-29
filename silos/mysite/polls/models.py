@@ -150,7 +150,7 @@ class Silos(models.Model):
     silos_id = models.CharField(max_length=4, blank=True, null=True)
     silos_code = models.CharField(primary_key=True, max_length=12)
 
-    
+
 
     class Meta:
         managed = False
@@ -191,7 +191,7 @@ class SilosAvgWeek(models.Model):
 
 class SilosDataIrt(models.Model):
     silos_data_time = models.DateTimeField()
-    silos_code = models.CharField(max_length=12)
+    silos_code = models.ForeignKey(Silos, models.DO_NOTHING, db_column='silos_code')
     silos_value = models.FloatField()
     error_code = models.CharField(max_length=20, blank=True, null=True)
 
