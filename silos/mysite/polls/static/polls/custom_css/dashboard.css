@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: lightgray;
+}
+
+.profile-section {
+    position: fixed;
+    width: 15rem;
+    height: 10rem;
+    left: 0;
+    bottom: 0;
+    top: 0;
+    z-index: 100;
+    border-right: 1px solid #d3d3d3;
+    background-color: #3b4652;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s;
+}
+
+.sidebar-nav {
+    position: fixed;
+    width: 15rem;
+    margin-top: 10rem;
+    left: 0;
+    bottom: 0;
+    top: 0;
+    z-index: 100;
+    border-right: 1px solid #d3d3d3;
+    background-color: #848484;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s;
+}
+
+.data-view {
+      width: calc(100% - 15rem);
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      margin-left: 17rem;
+      margin-right: 2rem;
+}
+
+a {
+    color: darkgreen;
+    text-decoration: none;
+    background-color: transparent;
+}
+
+.a-card{
+  font-size: 12px;
+}
+
+.user-img img {
+    height: 75px;
+    width: 75px;
+}
+
+a:link {
+    color: black;
+  }
+  a:visited {
+    color: black;
+  }
+  a:hover {
+    color: black;
+  }
+  a:active {
+    color: black;
+  }
+  .navbar {
+      background-color: lightgray;
+      border-color: lightgray;
+  }

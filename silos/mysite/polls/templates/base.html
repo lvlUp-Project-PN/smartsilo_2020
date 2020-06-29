@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}Django{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'polls/css/bootstrap.min.css' %}">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="{% static 'polls/css/personalizedStuff.css' %}">
+  <script src="{% static 'polls/css/graphsLogic.js' %}"></script>
+  <link rel="stylesheet" href="{% static 'polls/d3/d3.js' %}">
+  <link rel="stylesheet" href="{% static 'polls/custom_css/login.css' %}">
+</head>
+<body style="background-color: #fff">
+  <main>
+    {% block content %}
+    {% endblock %}
+  </main>
+</body>
+</html>

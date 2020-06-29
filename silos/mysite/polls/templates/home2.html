@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+
+<div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 d-none d-md-block">
+                <!-- Sidebar menu START -->
+                <div class="profile-section">
+                    <div class="row mt-1">
+                        <div class="col user-img text-center">
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col text-center">
+                            <h4 class="text-weight-bold">Hi {{ user.username }}!</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col text-center">
+                            <p>{{ user.email }}</p>
+                        </div>
+                    </div>
+                </div>
+                <ul class="nav flex-column sidebar-nav text-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Site1</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Site2</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Site3</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- Sidebar menu END -->
+
+            <!-- Data visualization area START -->
+            {% if siteresult %}
+
+    {% for silos in siteresult %}
+    <div class="data-view">
+        <div class="row">
+            <div class="col">
+                <div class="card border-dark">
+                    <div class="card-header">
+                        {{ silos.silos_code }}
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Informazioni IRT</h5>
+                    </div>
+                    <div class="card-footer">
+                        <a href="graphs.html" class="a-card">Maggiori informazioni</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+{% else %}
+    <p>No silos are available.</p>
+{% endif %}
+
+
+
+                <!-- Data visualization area START -->
+            </div>
+        </div>
+
+
+
+
+  <div class="fixed-bottom"><p class="float-left"><a href="{% url 'logout' %}">logout</a></p></div>
+{% else %}
+  <p class="float-left">You are not logged in</p>
+  <a href="{% url 'login' %}">login</a>
+{% endif %}
+{% endblock %}
