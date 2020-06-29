@@ -10,6 +10,16 @@ from django.http import HttpResponse
 def index(request):
     return HttpResponse("Hello, world.")
 
+def chart (request, pk):
+
+    silosobj= SilosAvgDay.objects.all().filter(silos_code=pk)
+
+    silosobj2= SilosAvgWeek.objects.all().filter(silos_code=pk)
+
+    silosobj3= SilosAvgMonth.objects.all().filter(silos_code=pk)
+
+    return render(request, 'graphs.html' )
+
 def siloscount(request):
 
     silosobj= Silos.objects.values('site_id').distinct()

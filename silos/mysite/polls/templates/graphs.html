@@ -1,12 +1,202 @@
 <!DOCTYPE html>
+
+{% extends 'base3.html' %}
 {% load static %}
-{% extends 'base.html' %}
 
 {% block title %}Home{% endblock %}
 
 {% block content %}
 {% if user.is_authenticated %}
-  Hi {{ user.username }}!
+<nav class="navbar navbar-expand-lg navbar-light mb-4">
+      <div class="imageLogo">
+          <img src="img/logoAziendaCliente.png" alt="" width="100" height="100">
+      </div>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+              </li>
+          </ul>
+          <form class="form-inline my-2 my-lg-0">
+              <a class="btn" href="/crud/Home/">Indietro</a>
+          </form>
+      </div>
+  </nav>
+
+  <div class="row">
+      <div id="silos_avg_day" class="col-4">
+          <span class="font-weight-bold mr-4">Media giornaliera</span>
+      </div>
+      <div id="silos_avg_week" class="col-4">
+          <span class="font-weight-bold mr-4">Media settimanale</span>
+      </div>
+      <div id="silos_avg_month" class="col-4">
+          <span class="font-weight-bold mr-4">Media mensile</span>
+      </div>
+  </div>
+
+
+  <script>
+      // set the dimensions and margins of the graph
+      var margin = { top: 10, right: 30, bottom: 30, left: 60 },
+          width = 500 - margin.left - margin.right,
+          height = 400 - margin.top - margin.bottom;
+
+      // append the svg object to the body of the page
+      var svg = d3.select("#silos_avg_day")
+          .append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+          .attr("transform",
+              "translate(" + margin.left + "," + margin.top + ")");
+
+      //Read the data
+      d3.csv("{% static 'polls/csv/exampleOne.csv' %}",
+
+          // When reading the csv, I must format variables:
+          function (d) {
+              return { date: d3.timeParse("%Y-%m-%d")(d.date), value: d.value }
+          },
+
+          // Now I can use this dataset:
+          function (data) {
+
+              // Add X axis --> it is a date format
+              var x = d3.scaleTime()
+                  .domain(d3.extent(data, function (d) { return d.date; }))
+                  .range([0, width]);
+              svg.append("g")
+                  .attr("transform", "translate(0," + height + ")")
+                  .call(d3.axisBottom(x));
+
+              // Add Y axis
+              var y = d3.scaleLinear()
+                  .domain([0, d3.max(data, function (d) { return +d.value; })])
+                  .range([height, 0]);
+              svg.append("g")
+                  .call(d3.axisLeft(y));
+
+              // Add the line
+              svg.append("path")
+                  .datum(data)
+                  .attr("fill", "none")
+                  .attr("stroke", "red")
+                  .attr("stroke-width", 1.5)
+                  .attr("d", d3.line()
+                      .x(function (d) { return x(d.date) })
+                      .y(function (d) { return y(d.value) })
+                  )
+          })
+
+  </script>
+
+  <script>
+      var margin = { top: 10, right: 30, bottom: 30, left: 60 },
+          width = 500 - margin.left - margin.right,
+          height = 400 - margin.top - margin.bottom;
+
+      // append the svg object to the body of the page
+      var svg2 = d3.select("#silos_avg_week")
+          .append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+          .attr("transform",
+              "translate(" + margin.left + "," + margin.top + ")");
+
+      //Read the data
+      d3.csv("{% static 'polls/csv/exampleTwo.csv' %}",
+
+          // When reading the csv, I must format variables:
+          function (d) {
+              return { date: d3.timeParse("%Y-%m-%d")(d.date), value: d.value }
+          },
+
+          // Now I can use this dataset:
+          function (data) {
+
+              // Add X axis --> it is a date format
+              var x = d3.scaleTime()
+                  .domain(d3.extent(data, function (d) { return d.date; }))
+                  .range([0, width]);
+              svg2.append("g")
+                  .attr("transform", "translate(0," + height + ")")
+                  .call(d3.axisBottom(x));
+
+              // Add Y axis
+              var y = d3.scaleLinear()
+                  .domain([0, d3.max(data, function (d) { return +d.value; })])
+                  .range([height, 0]);
+              svg2.append("g")
+                  .call(d3.axisLeft(y));
+
+              // Add the line
+              svg2.append("path")
+                  .datum(data)
+                  .attr("fill", "none")
+                  .attr("stroke", "red")
+                  .attr("stroke-width", 1.5)
+                  .attr("d", d3.line()
+                      .x(function (d) { return x(d.date) })
+                      .y(function (d) { return y(d.value) })
+                  )
+          })
+  </script>
+
+  <script>
+      // set the dimensions and margins of the graph
+      var margin = { top: 10, right: 30, bottom: 30, left: 60 },
+          width = 500 - margin.left - margin.right,
+          height = 400 - margin.top - margin.bottom;
+
+      // append the svg object to the body of the page
+      var svg3 = d3.select("#silos_avg_month")
+          .append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+          .attr("transform",
+              "translate(" + margin.left + "," + margin.top + ")");
+
+      //Read the data
+      d3.csv("{% static 'polls/csv/exampleOne.csv' %}",
+
+          // When reading the csv, I must format variables:
+          function (d) {
+              return { date: d3.timeParse("%Y-%m-%d")(d.date), value: d.value }
+          },
+
+          // Now I can use this dataset:
+          function (data) {
+
+              // Add X axis --> it is a date format
+              var x = d3.scaleTime()
+                  .domain(d3.extent(data, function (d) { return d.date; }))
+                  .range([0, width]);
+              svg3.append("g")
+                  .attr("transform", "translate(0," + height + ")")
+                  .call(d3.axisBottom(x));
+
+              // Add Y axis
+              var y = d3.scaleLinear()
+                  .domain([0, d3.max(data, function (d) { return +d.value; })])
+                  .range([height, 0]);
+              svg3.append("g")
+                  .call(d3.axisLeft(y));
+
+              // Add the line
+              svg3.append("path")
+                  .datum(data)
+                  .attr("fill", "none")
+                  .attr("stroke", "red")
+                  .attr("stroke-width", 1.5)
+                  .attr("d", d3.line()
+                      .x(function (d) { return x(d.date) })
+                      .y(function (d) { return y(d.value) })
+                  )
+          })
+
+  </script>
 {% else %}
   <p>You are not logged in</p>
   <a href="{% url 'login' %}">login</a>

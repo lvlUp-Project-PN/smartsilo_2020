@@ -33,16 +33,15 @@
                     </li>
                     {% endfor %}
                     <div class="marginBottomPersonalized">
+                        <p><a href="{% url 'logout' %}">logout</a></p>
                         <img src="{% static 'polls/images/logoAziendaCliente.png' %}" alt="" width=239px height=239px>
+
                     </div>
                 </ul>
 
             </div>
 
 
-
-  Hi {{ user.username }}!
-  <p><a href="{% url 'logout' %}">logout</a></p>
 {% else %}
   <p>You are not logged in</p>
   <a href="{% url 'login' %}">login</a>

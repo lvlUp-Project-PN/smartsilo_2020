@@ -30,5 +30,6 @@ urlpatterns = [
     path('SilosSpecs/<str:pk>',views.SilosSpecsUpdateDel.as_view()),
     path('Home/', views.siloscount, name='home'),
     path('Home/<str:pk>', views.silosvalue, name='home2'),
+    path('Graph/', TemplateView.as_view(template_name='graphs.html'), name='graph'),
 
 ]
