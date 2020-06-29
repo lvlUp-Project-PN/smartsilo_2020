@@ -6,11 +6,12 @@ from rest_framework.views import APIView
 from rest_framework import status
 # Create your views here.
 from django.http import HttpResponse
+import csv
 
 def index(request):
     return HttpResponse("Hello, world.")
 
-def chart(request, pk):
+def chart (request, pk):
 
     silosobj= SilosAvgDay.objects.all().filter(silos_code=pk)
 
@@ -18,7 +19,16 @@ def chart(request, pk):
 
     silosobj3= SilosAvgMonth.objects.all().filter(silos_code=pk)
 
-    return render(request, 'graphs.html' )
+    with open(r'C:\Users\Michele\Desktop\smartsilo_2020\silos\mysite\polls\static\polls\csv\prova.csv', 'w') as csvfile:
+        writer = csv.writer(csvfile)
+        row = ""
+
+        for item in silosobj:
+            row = f'{item.date},{item.day_avg}'
+        writer.writerow(row)
+
+
+    return render(request, 'graphs.html')
 
 def siloscount(request):
 
