@@ -27,7 +27,7 @@ def silosvalue (request, pk):
 
 
     if(pk=='0001'):
-        silosobj = SilosDataIrt.objects.all().order_by('id').distinct()[:2]
+        silosobj = SilosDataIrt.objects.all().order_by('-id').distinct()[:2]
 
 
     silosobj2= Silos.objects.values('site_id').distinct()

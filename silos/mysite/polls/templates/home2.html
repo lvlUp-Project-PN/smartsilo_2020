@@ -47,20 +47,16 @@
                                 <p class=text-center>{{silos.silos_code}}</p>
                             </div>
                             <div class="card-body">
-                                <div class="row">
-                                    <div class="col-sm-6" style="background-color:lightgrey;">
+                                    <div class="col" style="background-color:lightgrey;">
                                         <p class="text-center"> il livello del silos attualmente è: </p>
-                                        <p class="text-center"> {{ silos.silos_value}} </p>
+                                        <p class="text-center"> {{ silos.silos_value}} litri </p>
                                     </div>
-                                    <div class="col-sm-6" style="background-color:lightgrey;">
-                                        <p class="text-center"> il livello del silos attualmente è: </p>
-                                        <p class="text-center"> silos_time </p>
-                                    </div>
-                                </div>
+
+
                                 <p class="customMarginTop">STATUS</p>
                                 <div class="progress">
-                                    <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25"
-                                        aria-valuemin="0" aria-valuemax="100"></div>
+                                    <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow=" {{ silos.silos_value }} "
+                                        aria-valuemin="0" aria-valuemax="155000"></div>
                                 </div>
                             </div>
                             <div class="card-footer">
