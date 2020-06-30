@@ -51,7 +51,7 @@
               "translate(" + margin.left + "," + margin.top + ")");
 
       //Read the data
-      d3.csv("{% static 'polls/csv/exampleOne.csv' %}",
+      d3.csv("{% static 'polls/csv/day_avg.csv' %}",
 
           // When reading the csv, I must format variables:
           function (d) {
@@ -105,7 +105,7 @@
               "translate(" + margin.left + "," + margin.top + ")");
 
       //Read the data
-      d3.csv("{% static 'polls/csv/exampleTwo.csv' %}",
+      d3.csv("{% static 'polls/csv/week_avg.csv' %}",
 
           // When reading the csv, I must format variables:
           function (d) {
@@ -159,7 +159,7 @@
               "translate(" + margin.left + "," + margin.top + ")");
 
       //Read the data
-      d3.csv("{% static 'polls/csv/exampleOne.csv' %}",
+      d3.csv("{% static 'polls/csv/month_avg.csv' %}",
 
           // When reading the csv, I must format variables:
           function (d) {
