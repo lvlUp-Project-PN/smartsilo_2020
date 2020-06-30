@@ -61,7 +61,7 @@ def exec_tasks_on_insts():
             Thread(target=sensor.run()).start()
         for gateway in gateways:
             gateway.get_data_from_sensors()
-        time.sleep(1.0)
+        time.sleep(5.0)
                 
 def run():
     create_instances()

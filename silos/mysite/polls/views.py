@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework import status
 # Create your views here.
 from django.http import HttpResponse
-import csv
+import os
 
 def index(request):
     return HttpResponse("Hello, world.")
@@ -59,7 +59,7 @@ def silosvalue (request, pk):
 
 
     if(pk=='0001'):
-        silosobj = SilosDataIrt.objects.all().order_by('-id').distinct()[:2]
+        silosobj = SilosDataIrt.objects.all().order_by('-id').distinct()[0:2]
 
 
     silosobj2= Silos.objects.values('site_id').distinct()

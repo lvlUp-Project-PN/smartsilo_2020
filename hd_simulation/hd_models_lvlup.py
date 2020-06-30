@@ -38,13 +38,13 @@ class Gateway:
             return
 
     def send_data_to_db(self,silos_id, silos_value):
-        service = SensorsDataServices(SensorDataRepository(Configuration(),"SensorTemp"))
+        #service = SensorsDataServices(SensorDataRepository(Configuration(),"SensorTemp"))
         data = SensorData()
         data.SilosCode = silos_id
         data.SilosDataTime = datetime.now()
         data.SilosValue = silos_value
-        #post(url='http://52.49.107.35/post/SilosDataIrt/', json=json.dumps(data))
-        service.insert(data)
+        post(url='http://ec2-34-254-222-211.eu-west-1.compute.amazonaws.com/post/SilosDataIrt/', json=json.dumps(data))
+        #service.insert(data)
         print(f'value inserted: {silos_id} {data.SilosDataTime} {data.SilosValue}')
 
 
