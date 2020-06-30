@@ -14,19 +14,31 @@ def index(request):
 def chart (request, pk):
 
     silosobj= SilosAvgDay.objects.all().filter(silos_code=pk)
+    path1 = os.path.join(os.getcwd(),'polls\static\polls\csv\day_avg.csv')
+    if os.path.exists(path1):
+        os.remove(path1)
+    with open(path1, 'a') as csvfile1:
+        csvfile1.write('date,value\n')
+        for item in silosobj:
+            csvfile1.write(f'{item.day},{int(item.day_avg)}\n')
 
     silosobj2= SilosAvgWeek.objects.all().filter(silos_code=pk)
+    path2 = os.path.join(os.getcwd(),'polls\static\polls\csv\week_avg.csv')
+    if os.path.exists(path2):
+        os.remove(path2)
+    with open(path2, 'a') as csvfile2:
+        csvfile2.write('date,value\n')
+        for item in silosobj2:
+            csvfile2.write(f'{item.start_date},{int(item.week_avg)}\n')
 
     silosobj3= SilosAvgMonth.objects.all().filter(silos_code=pk)
-
-    with open(r'C:\Users\Michele\Desktop\smartsilo_2020\silos\mysite\polls\static\polls\csv\prova.csv', 'w') as csvfile:
-        writer = csv.writer(csvfile)
-        row = ""
-
-        for item in silosobj:
-            row = f'{item.date},{item.day_avg}'
-        writer.writerow(row)
-
+    path3 = os.path.join(os.getcwd(),'polls\static\polls\csv\month_avg.csv')
+    if os.path.exists(path3):
+        os.remove(path3)
+    with open(path3, 'a') as csvfile3:
+        csvfile3.write('date,value\n')
+        for item in silosobj3:
+            csvfile3.write(f'{item.date},{int(item.month_avg)}\n')
 
     return render(request, 'graphs.html')
 
