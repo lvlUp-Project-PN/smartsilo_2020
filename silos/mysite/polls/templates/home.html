@@ -43,8 +43,14 @@
 
 
 {% else %}
-  <p>You are not logged in</p>
-  <a href="{% url 'login' %}">login</a>
+<div class="text-center body">
+        <div class="row mt-4">
+            <div class="col-12">
+                <p style="color: white;">Non sei connesso:</p>
+                <a href="{% url 'login' %}" class="btn btn-outline-light">Effettua il login</a>
+            </div>
+        </div>
+    </div>
 {% endif %}
 </body>
 {% endblock %}
