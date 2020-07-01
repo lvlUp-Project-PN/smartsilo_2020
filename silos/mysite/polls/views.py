@@ -4,6 +4,7 @@ from .serialize import *
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
+from django.db import models
 # Create your views here.
 from django.http import HttpResponse
 import os
@@ -52,14 +53,14 @@ def siloscount(request):
     return render(request, 'home.html', context )
 
 def silosvalue (request, pk):
-    if(pk=='0000'):
+    #if(pk=='0000'):
 
-        silosobj = SilosDataIrt.objects.all().order_by('-id').distinct()[2:4]
+        #silosobj = SilosDataIrt.objects.all()
+    silosobj = SilosDataIrt.objects.filter(silos_code__startswith=pk).order_by('-id')[:2]
 
 
-
-    if(pk=='0001'):
-        silosobj = SilosDataIrt.objects.all().order_by('-id').distinct()[0:2]
+    #if(pk=='0001'):
+        #silosobj = SilosDataIrt.objects.all().order_by('-id').distinct()[0:2]
 
 
     silosobj2= Silos.objects.values('site_id').distinct()
